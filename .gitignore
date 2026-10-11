@@ -1,0 +1,24 @@
+# REAL DATA — never upload: receipts, customer names, backups, passwords (hashed)
+data/
+*.db
+*.db-wal
+*.db-shm
+*.accdb
+*.mdb
+*.laccdb
+
+# exports and temporary files
+receipts_*.csv
+receipts_*.xlsx
+centro-receipts-latest.xlsx
+*.part
+.centro-write-test-*
+
+# editor / OS / tools
+node_modules/
+.claude/
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store

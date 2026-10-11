@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1F2A44">
+  <title>CENTRO TOWER</title>
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="app.css">
+  <style id="pageStyle">@page { size: A5 landscape; margin: 1cm; }</style>
+</head>
+<body>
+<div id="app" hidden>
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">
+        <div class="brand-name">CENTRO TOWER</div>
+        <div class="brand-sub" data-t="subtitle"></div>
+      </div>
+      <div class="top-tools">
+        <div class="search">
+          <label for="find" data-t="search"></label>
+          <div class="search-box">
+            <input id="find" type="search" autocomplete="off" data-t-ph="searchPh">
+            <div id="findList" class="dropdown" hidden></div>
+          </div>
+        </div>
+        <button id="btnAptReport" class="btn btn-outline-light" data-t="btnAptReport"></button>
+        <button id="btnLang" class="btn btn-gold" data-t="langToggle"></button>
+        <button id="backupWarn" class="warn-chip" hidden></button>
+        <div class="user-chip">
+          <span id="userName"></span>
+          <button id="btnSettings" class="chip-btn" data-t-title="btnSettings" aria-label="settings">⚙</button>
+          <button id="btnLogout" class="chip-btn" data-t-title="btnLogout" aria-label="logout">⇄</button>
+        </div>
+      </div>
+    </div>
+    <div class="gold-line"></div>
+  </header>
+
+  <main>
+    <!-- ======================= Screen 1: Receipt -->
+    <section id="view-receipt" class="view">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-h"><span data-t="cardInfo"></span><span id="voidBadge" class="badge-void" data-t="voidBadge" hidden></span></div>
+          <div class="field">
+            <label data-t="lblReceiptNo"></label>
+            <div class="rno-wrap"><span id="rNo" class="rno" dir="ltr"></span><span id="rAuto" class="rno-hint" data-t="autoHint"></span></div>
+          </div>
+          <div class="field">
+            <label for="fDate" data-t="lblDate"></label>
+            <div class="date-wrap">
+              <input id="fDate" class="ed" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" dir="ltr">
+              <button type="button" id="fDatePick" class="icon-btn ed" aria-label="calendar">📅</button>
+              <input type="date" id="fDateNative" class="native-date" tabindex="-1" aria-hidden="true">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span data-t="cardSub"></span></div>
+          <div class="field"><label for="fName" data-t="lblName"></label><input id="fName" class="ed" maxlength="120" autocomplete="off"></div>
+          <div class="field-row">
+            <div class="field"><label for="fType" data-t="typeLbl"></label><select id="fType" class="ed"></select></div>
+            <div class="field"><label for="fApt" data-t="lblApt"></label><input id="fApt" class="ed" maxlength="20" list="aptList" autocomplete="off"><datalist id="aptList"></datalist></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><span data-t="cardMonths"></span>
+          <label class="cur-pick"><span data-t="lblCurrency"></span><select id="fCur" class="ed"></select></label></div>
+        <div class="months-wrap">
+          <table class="lines">
+            <thead><tr><th class="num-col">#</th><th data-t="colMonth"></th><th data-t="colYear"></th><th id="thAmount"></th></tr></thead>
+            <tbody id="linesBody"></tbody>
+          </table>
+          <div class="total-box"><div class="total-lbl" data-t="grandTotal"></div><div id="totalVal" class="total-val" dir="ltr">$0</div></div>
+        </div>
+      </div>
+
+      <div class="card grid-2 tight">
+        <div class="field"><label for="fRecv" data-t="lblRecv"></label><input id="fRecv" class="ed" maxlength="80"></div>
+        <div class="field"><label for="fNotes" data-t="lblNotes"></label><input id="fNotes" class="ed" maxlength="255"></div>
+      </div>
+
+      <footer class="actions">
+        <div class="btn-row">
+          <button id="bNew" class="btn btn-gold" data-t="btnNew"></button>
+          <button id="bSave" class="btn btn-navy" data-t="btnSave"></button>
+          <button id="bEdit" class="btn btn-white" data-t="btnEdit"></button>
+          <button id="bPrint" class="btn btn-navy" data-t="btnPrint"></button>
+          <button id="bList" class="btn btn-white" data-t="btnList"></button>
+          <button id="bMonthly" class="btn btn-white" data-t="btnMonthly"></button>
+          <button id="bVoid" class="btn btn-danger" data-t="btnVoid"></button>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </footer>
+    </section>
+
+    <section id="view-list" class="view" hidden></section>
+    <section id="view-apt" class="view" hidden></section>
+    <section id="view-monthly" class="view" hidden></section>
+    <section id="view-settings" class="view" hidden></section>
+  </main>
+</div>
+
+<div id="gate" class="gate" hidden></div>
+<div id="modal" class="modal" hidden><div class="modal-box" role="dialog" aria-modal="true"></div></div>
+<div id="preview" class="preview" hidden>
+  <div class="preview-bar">
+    <strong data-t="previewTitle"></strong>
+    <label class="paper"><span data-t="paper"></span>
+      <select id="paperSel"><option value="A5">A5</option><option value="A4">A4</option></select>
+    </label>
+    <button id="pvPrint" class="btn btn-gold" data-t="btnPrint"></button>
+    <button id="pvClose" class="btn btn-white" data-t="close"></button>
+  </div>
+  <div class="preview-body"><div id="pvSheet" class="pv-sheet"></div></div>
+</div>
+<div id="print-root"></div>
+<script src="app.js"></script>
+</body>
+</html>

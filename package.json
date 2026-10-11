@@ -1,0 +1,12 @@
+{
+  "name": "centro-tower-receipts",
+  "version": "1.0.0",
+  "description": "CENTRO TOWER generator-electricity payment receipts (Kurdish/Arabic, offline, SQLite)",
+  "private": true,
+  "main": "server.js",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "test": "node --disable-warning=ExperimentalWarning test/run-tests.js"
+  }
+}
