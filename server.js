@@ -16,6 +16,8 @@ const PORT = Number(portArg ? portArg.slice(7) : process.env.PORT) || 3000;
 const PUBLIC = path.join(__dirname, 'public');
 const db = D.open();
 const AppError = L.AppError;
+const DEMO = D.DEMO ? require('./server/demo') : null;
+if (DEMO) { const r = DEMO.seed(db); console.log(`  DEMO mode: ${r.receipts} sample receipts, ${r.apartments} apartments (data is wiped at every start)`); }
 
 // ------------------------------------------------------------------ backups
 fs.mkdirSync(D.BACKUP_DIR, { recursive: true });
@@ -129,7 +131,8 @@ route('GET', '/api/bootstrap', PUBLIC_ROUTE, (ctx) => {
     user: ctx.user, users: db.prepare('SELECT Name name, PinHash IS NOT NULL hasPin FROM Users WHERE Active = 1 ORDER BY Name').all()
       .map((u) => ({ name: u.name, hasPin: !!u.hasPin })),
     preview: L.peekNextNo(db),
-    backupWarning: ctx.user && s.SetupDone ? MIR.warning(db) : null,
+    backupWarning: ctx.user && s.SetupDone && !DEMO ? MIR.warning(db) : null,
+    demo: DEMO ? { password: DEMO.DEMO_PASSWORD } : null,
   };
 });
 

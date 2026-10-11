@@ -5,9 +5,14 @@ const { DatabaseSync } = require('node:sqlite');
 const DEFAULT_TEXTS = require('./texts');
 
 const ROOT = path.join(__dirname, '..');
+// DEMO mode (--demo or CENTRO_DEMO=1): a throw-away database with sample data, wiped at every start.
+// Used for showing the system online; it never touches the real data folder.
+const DEMO = process.argv.includes('--demo') || process.env.CENTRO_DEMO === '1';
 // data folder: --data=<folder> on the command line, or env CENTRO_DATA, else ./data
 const dataArg = process.argv.find((a) => a.startsWith('--data='));
-const DATA_DIR = path.resolve(dataArg ? dataArg.slice(7) : process.env.CENTRO_DATA || path.join(ROOT, 'data'));
+const DATA_DIR = DEMO ? path.join(require('os').tmpdir(), 'centro-demo')
+  : path.resolve(dataArg ? dataArg.slice(7) : process.env.CENTRO_DATA || path.join(ROOT, 'data'));
+if (DEMO) fs.rmSync(DATA_DIR, { recursive: true, force: true });
 const DB_FILE = path.join(DATA_DIR, 'centro.db');
 const BACKUP_DIR = path.join(DATA_DIR, 'backups');
 
@@ -132,4 +137,4 @@ function tx(db, fn) {
   }
 }
 
-module.exports = { open, tx, DB_FILE, DATA_DIR, BACKUP_DIR, DEFAULT_TEXTS, CURRENCIES };
+module.exports = { open, tx, DB_FILE, DATA_DIR, BACKUP_DIR, DEFAULT_TEXTS, CURRENCIES, DEMO };

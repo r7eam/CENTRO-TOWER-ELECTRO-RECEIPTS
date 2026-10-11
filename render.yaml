@@ -1,0 +1,14 @@
+# Online DEMO on Render.com (free plan). Shows the system with fake sample data that is wiped
+# at every restart — real receipts never leave the office PC.
+# Render: New → Blueprint → choose this repository → Apply.
+services:
+  - type: web
+    name: centro-tower-demo
+    runtime: node
+    plan: free
+    buildCommand: echo "no dependencies to install"
+    startCommand: node --disable-warning=ExperimentalWarning server.js --demo
+    healthCheckPath: /api/bootstrap
+    envVars:
+      - key: NODE_VERSION
+        value: 22.19.0

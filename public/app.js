@@ -114,7 +114,17 @@ function download({ blob, name }) {
 }
 
 // ====================================================================== language
+// online demo: a banner on every screen saying the data is fake (plus the demo admin password)
+let DEMO_INFO = null;
+function renderDemoBar() {
+  const bar = document.getElementById('demoBar');
+  if (!bar) return;
+  bar.hidden = !DEMO_INFO;
+  document.body.classList.toggle('demo', !!DEMO_INFO);
+  if (DEMO_INFO) bar.textContent = t('demoBanner', { pw: DEMO_INFO.password });
+}
 function applyLang() {
+  renderDemoBar();
   document.documentElement.lang = LANG === 'ar' ? 'ar' : 'ckb';
   document.title = t('formCaption');
   $$('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
@@ -162,7 +172,7 @@ async function showGate() {
   const g = $('#gate');
   g.hidden = false;
   try { GATE_INFO = await api('GET', '/api/bootstrap'); } catch (e) { g.innerHTML = `<div class="gate-box"><div class="gate-body"><div class="err">${esc(errText(e))}</div></div></div>`; return; }
-  TEXTS = GATE_INFO.texts; TODAY = GATE_INFO.today;
+  TEXTS = GATE_INFO.texts; TODAY = GATE_INFO.today; DEMO_INFO = GATE_INFO.demo; renderDemoBar();
   const head = `<div class="gate-head"><div><div class="brand-name">CENTRO TOWER</div><div class="muted">${esc(t('subtitle'))}</div></div>
     <button class="btn btn-gold btn-sm" id="gLang">${esc(t('langToggle'))}</button></div>`;
   if (!GATE_INFO.setupDone) {
@@ -228,7 +238,7 @@ async function boot() {
   TOKEN = store.get('centroToken');
   let b;
   try { b = await api('GET', '/api/bootstrap'); } catch (e) { document.body.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; }
-  TEXTS = b.texts; LANG = b.lang; TODAY = b.today;
+  TEXTS = b.texts; LANG = b.lang; TODAY = b.today; DEMO_INFO = b.demo;
   applyLang();
   if (!b.setupDone || !b.user) return showGate();
   USER = b.user;
